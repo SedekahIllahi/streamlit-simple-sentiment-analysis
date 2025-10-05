@@ -3,6 +3,8 @@ from textblob import TextBlob
 import pandas as pd
 import altair as alt
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from deep_translator import GoogleTranslator
+
 
 
 def convert_to_df(sentiment):
@@ -62,8 +64,11 @@ def main():
         if submit_button:
             with col1:
                 st.info("Results")
-
-                sentiment = TextBlob(raw_text).sentiment
+                
+                translated_text = GoogleTranslator(source='auto', target='en').translate(raw_text)
+                st.write("**Translated Text (for analysis):**", translated_text)
+                
+                sentiment = TextBlob(translated_text).sentiment
                 st.write(sentiment)
 
                 # Emoji
@@ -88,7 +93,7 @@ def main():
 
             with col2:
                 st.info("Token Sentiment")
-                token_sentiments = analyze_token_sentiment(raw_text)
+                token_sentiments = analyze_token_sentiment(translated_text)
                 st.write(token_sentiments)
 
     else:
